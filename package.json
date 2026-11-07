@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@nestjs/observe": "^0.3.24"
+  }
+}
