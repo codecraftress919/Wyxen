@@ -1,3 +1,88 @@
+# The Small Web Browser API
+
+## Setup
+
+```powershell
+cd backend
+npm install
+Copy-Item .env.example .env
+npm run start:dev
+```
+
+The API listens on port `3001` by default.
+
+## API response format
+
+Successful responses are wrapped consistently:
+
+```json
+{ "data": {} }
+```
+
+Errors use NestJS HTTP error bodies.
+
+## Endpoints
+
+### People
+
+`GET /api/people` returns people sorted by name.
+
+### Sites
+
+`GET /api/sites/:address` or `GET /api/sites?address=tidepool.zz`
+
+`POST /api/sites`
+
+```json
+{
+  "address": "tidepool.zz",
+  "title": "Life at the Tidepool",
+  "html": "<h1>Welcome</h1><p>Example content</p>",
+  "authorId": "VALID_PERSON_OBJECT_ID"
+}
+```
+
+### Search
+
+`GET /api/search?q=tidepool&limit=20`
+
+The response contains titles, addresses, authors, relevance, and short excerpts, not HTML.
+
+### Visits
+
+`POST /api/visits`
+
+```json
+{
+  "personId": "VALID_PERSON_OBJECT_ID",
+  "address": "tidepool.zz",
+  "navigationType": "typed"
+}
+```
+
+`navigationType` must be `typed`, `link`, `search`, or `history`.
+
+`GET /api/visits?personId=VALID_PERSON_OBJECT_ID&limit=20`
+
+Pass the returned `nextCursor` as `cursor` for subsequent pages.
+
+## Testing with Postman or Thunder Client
+
+1. Start MongoDB locally at `mongodb://localhost:27017`.
+2. Copy `.env.example` to `.env`.
+3. Start the backend with `npm run start:dev`.
+4. Send requests to `http://localhost:3001/api/...`.
+5. Create a person in MongoDB before publishing a site or recording a visit, then use its `_id` as `authorId` or `personId`.
+
+## Automated tests
+
+```powershell
+npm test
+npm run test:e2e
+```
+
+Unit tests use mocked Mongoose models when MongoDB is unavailable.
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

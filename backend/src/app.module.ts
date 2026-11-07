@@ -7,6 +7,7 @@ import { DatabaseModule } from './config/database.module.js';
 import { PeopleModule } from './people/people.module.js';
 import { SitesModule } from './sites/sites.module.js';
 import { VisitsModule } from './visits/visits.module.js';
+import { SearchModule } from './search/search.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -20,6 +21,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     PeopleModule,
     SitesModule,
     VisitsModule,
+    SearchModule,
     // Distributed tracing, auto-correlated logs, request/job metrics, error
     // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com,
     // then run `npx @nestjs/observe link` to write your key pair into .env.
