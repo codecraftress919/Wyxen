@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
 
 export class PersonIdDto {
   @IsMongoId()
@@ -28,6 +28,7 @@ export class SearchQueryDto {
   )
   @IsNotEmpty()
   @IsString()
+  @MaxLength(200)
   q: string;
 
   @IsOptional()
