@@ -11,6 +11,7 @@ interface BrowserToolbarProps {
   canGoBack: boolean;
   canGoForward: boolean;
   historyOpen: boolean;
+  onPublish: () => void;
   onAddressChange: (address: string) => void;
   onPersonChange: (personId: string) => void;
   onNavigate: (event?: FormEvent<HTMLFormElement>) => void;
@@ -52,6 +53,7 @@ export function BrowserToolbar({
   canGoBack,
   canGoForward,
   historyOpen,
+  onPublish,
   onAddressChange,
   onPersonChange,
   onNavigate,
@@ -106,6 +108,13 @@ export function BrowserToolbar({
           onClick={onToggleHistory}
         >
           History
+        </button>
+        <button
+          type="button"
+          className="publish-button"
+          onClick={onPublish}
+        >
+          Publish Website
         </button>
       </div>
 

@@ -49,3 +49,10 @@ export interface WebsiteSearchState {
   error: string;
   hasSearched: boolean;
 }
+
+export interface PublishWebsiteInput {
+  address: string;
+  title: string;
+  html: string;
+  authorId: string;
+}

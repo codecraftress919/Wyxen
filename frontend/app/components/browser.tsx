@@ -18,6 +18,7 @@ import type {
 } from "../types";
 import { BrowserToolbar } from "./browser-toolbar";
 import { BrowsingHistoryPanel } from "./browsing-history-panel";
+import { PublishWebsiteModal } from "./publish-website-modal";
 import { WebsiteSearchPanel } from "./website-search-panel";
 import { WebsiteViewer } from "./website-viewer";
 
@@ -76,6 +77,7 @@ export function Browser() {
     hasSearched: false,
   });
   const [searchLoading, setSearchLoading] = useState(false);
+  const [publishingOpen, setPublishingOpen] = useState(false);
   const navigationRequestId = useRef(0);
   const historyRequestId = useRef(0);
   const searchRequestId = useRef(0);
@@ -377,6 +379,7 @@ export function Browser() {
         canGoBack={currentIndex > 0}
         canGoForward={currentIndex < entries.length - 1}
         historyOpen={historyOpen}
+        onPublish={() => setPublishingOpen(true)}
         onAddressChange={(value) => {
           setAddress(value);
           setValidationError("");
@@ -431,6 +434,19 @@ export function Browser() {
           />
         )}
       </div>
+      {publishingOpen && (
+        <PublishWebsiteModal
+          authorId={selectedPersonId}
+          authorName={
+            people.find((person) => person._id === selectedPersonId)?.name ?? ""
+          }
+          onClose={() => setPublishingOpen(false)}
+          onOpenWebsite={(publishedAddress) => {
+            setPublishingOpen(false);
+            void navigate(undefined, publishedAddress, "typed");
+          }}
+        />
+      )}
     </main>
   );
 }

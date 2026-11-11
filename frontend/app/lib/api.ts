@@ -1,6 +1,7 @@
 import type {
   NavigationType,
   Person,
+  PublishWebsiteInput,
   Site,
   VisitHistoryPage,
   WebsiteSearchResult,
@@ -69,6 +70,14 @@ export function fetchPeople(): Promise<Person[]> {
 
 export function fetchSite(address: string): Promise<Site> {
   return request<Site>(`/sites/${encodeURIComponent(address)}`);
+}
+
+export function publishWebsite(input: PublishWebsiteInput): Promise<Site> {
+  return request<Site>("/sites", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
 }
 
 export function createVisit(

@@ -178,6 +178,202 @@ body {
   background: #f3f6fb;
 }
 
+.publish-button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: #315ea8;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.publish-button:hover {
+  background: #254d91;
+}
+
+.publish-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(16, 24, 40, 0.48);
+}
+
+.publish-modal {
+  width: min(100%, 620px);
+  max-height: min(90vh, 820px);
+  overflow-y: auto;
+  border: 1px solid #dbe0e8;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(16, 24, 40, 0.25);
+}
+
+.publish-modal-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid #e5e8ee;
+}
+
+.publish-eyebrow {
+  margin: 0 0 7px;
+  color: #667085;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.publish-modal-heading h2 {
+  margin: 0;
+  color: #1d2939;
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.publish-close {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e5e8ee;
+  border-radius: 50%;
+  color: #667085;
+  background: #fff;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.publish-close:hover:not(:disabled) {
+  background: #f3f5f8;
+}
+
+.publish-form,
+.publish-success {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 20px 24px 24px;
+}
+
+.publish-author {
+  margin: 0 0 7px;
+  color: #667085;
+  font-size: 13px;
+}
+
+.publish-author strong {
+  color: #344054;
+}
+
+.publish-form label {
+  margin-top: 6px;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.publish-form input,
+.publish-form textarea {
+  width: 100%;
+  border: 1px solid #ccd3df;
+  border-radius: 7px;
+  padding: 10px 12px;
+  color: #1d2939;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.publish-form input:focus,
+.publish-form textarea:focus {
+  border-color: #7b8cbe;
+  outline: 3px solid rgba(123, 140, 190, 0.14);
+}
+
+.publish-form input:disabled,
+.publish-form textarea:disabled {
+  background: #f3f5f8;
+}
+
+.publish-form textarea {
+  min-height: 180px;
+  resize: vertical;
+  font-family: var(--font-geist-mono), Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.publish-security-note {
+  margin: 0;
+  color: #667085;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.publish-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.publish-success {
+  color: #344054;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.publish-success p {
+  margin: 0 0 8px;
+}
+
+.publish-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.publish-submit,
+.publish-secondary {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.publish-submit {
+  color: #fff;
+  background: #315ea8;
+}
+
+.publish-submit:hover:not(:disabled) {
+  background: #254d91;
+}
+
+.publish-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.publish-secondary {
+  border-color: #d9dee8;
+  color: #344054;
+  background: #fff;
+}
+
+.publish-secondary:hover:not(:disabled) {
+  background: #f5f7fa;
+}
+
 .browser-content {
   flex: 1;
   min-height: 0;
@@ -604,8 +800,25 @@ body {
     padding: 10px 12px;
   }
 
+  .navigation-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .address-form {
+    order: 1;
+    flex-basis: 100%;
+  }
+
   .history-controls {
     gap: 0;
+  }
+
+  .history-toggle,
+  .publish-button {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 12px;
   }
 
   .icon-button {
@@ -666,5 +879,26 @@ body {
 
   .history-panel-heading {
     padding: 12px;
+  }
+
+  .publish-modal-backdrop {
+    align-items: end;
+    padding: 8px;
+  }
+
+  .publish-modal {
+    max-height: 94vh;
+    border-radius: 12px;
+  }
+
+  .publish-modal-heading,
+  .publish-form,
+  .publish-success {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .publish-actions {
+    flex-wrap: wrap;
   }
 }
