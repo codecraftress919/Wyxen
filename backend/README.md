@@ -74,6 +74,22 @@ Pass the returned `nextCursor` as `cursor` for subsequent pages.
 4. Send requests to `http://localhost:3001/api/...`.
 5. Create a person in MongoDB before publishing a site or recording a visit, then use its `_id` as `authorId` or `personId`.
 
+## Seed assessment data
+
+From the `backend` directory, configure `MONGODB_URI` in `.env` as for the
+application, then run:
+
+```powershell
+npm run seed
+```
+
+The command builds the backend and runs an idempotent seed for four fictional
+people, ten websites, and deterministic browsing history spanning about one
+hour. Existing people with the same names and websites with the same addresses
+are reused; their seeded records are updated in place. Seeded visits have
+stable IDs, and unrelated database records are not deleted or modified.
+Fictional broken-link targets are intentionally left without website records.
+
 ## Automated tests
 
 ```powershell
