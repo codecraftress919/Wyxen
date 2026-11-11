@@ -3,6 +3,7 @@ import type {
   Person,
   Site,
   VisitHistoryPage,
+  WebsiteSearchResult,
 } from "../types";
 
 const API_BASE_URL = (
@@ -89,4 +90,12 @@ export function fetchVisitHistory(
   const query = new URLSearchParams({ personId, limit: "20" });
   if (cursor) query.set("cursor", cursor);
   return request<VisitHistoryPage>(`/visits?${query.toString()}`);
+}
+
+export function searchWebsites(
+  query: string,
+  limit = 20,
+): Promise<WebsiteSearchResult[]> {
+  const params = new URLSearchParams({ q: query, limit: String(limit) });
+  return request<WebsiteSearchResult[]>(`/search?${params.toString()}`);
 }

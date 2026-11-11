@@ -35,3 +35,17 @@ export interface VisitHistoryPage {
   data: VisitHistoryItem[];
   nextCursor: string | null;
 }
+
+export interface WebsiteSearchResult {
+  address: string;
+  title: string;
+  excerpt: string;
+  author?: SiteAuthor;
+}
+
+export interface WebsiteSearchState {
+  query: string;
+  results: WebsiteSearchResult[];
+  error: string;
+  hasSearched: boolean;
+}

@@ -7,15 +7,18 @@ import {
   fetchPeople,
   fetchSite,
   fetchVisitHistory,
+  searchWebsites,
 } from "../lib/api";
 import type {
   NavigationType,
   Person,
   Site,
   VisitHistoryItem,
+  WebsiteSearchState,
 } from "../types";
 import { BrowserToolbar } from "./browser-toolbar";
 import { BrowsingHistoryPanel } from "./browsing-history-panel";
+import { WebsiteSearchPanel } from "./website-search-panel";
 import { WebsiteViewer } from "./website-viewer";
 
 export type ViewState =
@@ -35,6 +38,7 @@ export interface NavigationEntry {
   address: string;
   view: CompletedViewState;
   visitError?: string;
+  searchSnapshot?: WebsiteSearchState;
 }
 
 const ADDRESS_PATTERN =
@@ -64,8 +68,17 @@ export function Browser() {
   const [historyLoadingMore, setHistoryLoadingMore] = useState(false);
   const [historyError, setHistoryError] = useState("");
   const [historyRefreshVersion, setHistoryRefreshVersion] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchState, setSearchState] = useState<WebsiteSearchState>({
+    query: "",
+    results: [],
+    error: "",
+    hasSearched: false,
+  });
+  const [searchLoading, setSearchLoading] = useState(false);
   const navigationRequestId = useRef(0);
   const historyRequestId = useRef(0);
+  const searchRequestId = useRef(0);
   const nextEntryId = useRef(0);
   const selectedPersonRef = useRef("");
 
@@ -122,6 +135,7 @@ export function Browser() {
     event?: FormEvent<HTMLFormElement>,
     addressToVisit = address,
     navigationType: NavigationType = "typed",
+    searchSnapshot = searchState,
   ) {
     event?.preventDefault();
     const normalizedAddress = addressToVisit
@@ -190,6 +204,7 @@ export function Browser() {
       id: ++nextEntryId.current,
       address: normalizedAddress,
       view,
+      searchSnapshot,
       ...(visitError ? { visitError } : {}),
     };
     const nextEntries = [
@@ -217,6 +232,81 @@ export function Browser() {
     setHistoryLoading(Boolean(personId));
   }
 
+  async function search(event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+    const query = searchInput.trim();
+    const requestId = ++searchRequestId.current;
+    if (!query) {
+      setSearchState({
+        query: "",
+        results: [],
+        error: "Enter keywords to search websites.",
+        hasSearched: true,
+      });
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchInput(query);
+    setSearchState({ query, results: [], error: "", hasSearched: true });
+    setSearchLoading(true);
+    const originEntryId = entries[currentIndex]?.id;
+
+    try {
+      const results = await searchWebsites(query);
+      if (requestId !== searchRequestId.current) return;
+      const nextState: WebsiteSearchState = {
+        query,
+        results,
+        error: "",
+        hasSearched: true,
+      };
+      setSearchState(nextState);
+      if (originEntryId !== undefined) {
+        setEntries((current) =>
+          current.map((entry) =>
+            entry.id === originEntryId
+              ? { ...entry, searchSnapshot: nextState }
+              : entry,
+          ),
+        );
+      }
+    } catch (error) {
+      if (requestId !== searchRequestId.current) return;
+      const nextState: WebsiteSearchState = {
+        query,
+        results: [],
+        error: getErrorMessage(error, "Could not search websites."),
+        hasSearched: true,
+      };
+      setSearchState(nextState);
+      if (originEntryId !== undefined) {
+        setEntries((current) =>
+          current.map((entry) =>
+            entry.id === originEntryId
+              ? { ...entry, searchSnapshot: nextState }
+              : entry,
+          ),
+        );
+      }
+    } finally {
+      if (requestId === searchRequestId.current) setSearchLoading(false);
+    }
+  }
+
+  function restoreSearchSnapshot(index: number) {
+    searchRequestId.current += 1;
+    setSearchLoading(false);
+    const snapshot = entries[index]?.searchSnapshot ?? {
+      query: "",
+      results: [],
+      error: "",
+      hasSearched: false,
+    };
+    setSearchState(snapshot);
+    setSearchInput(snapshot.query);
+  }
+
   function goBack() {
     if (currentIndex <= 0) return;
     navigationRequestId.current += 1;
@@ -225,6 +315,7 @@ export function Browser() {
     setAddress(entries[nextIndex].address);
     setIsNavigating(false);
     setValidationError("");
+    restoreSearchSnapshot(nextIndex);
   }
 
   function goForward() {
@@ -235,6 +326,7 @@ export function Browser() {
     setAddress(entries[nextIndex].address);
     setIsNavigating(false);
     setValidationError("");
+    restoreSearchSnapshot(nextIndex);
   }
 
   async function loadMoreHistory() {
@@ -304,6 +396,23 @@ export function Browser() {
           entries={entries}
           currentIndex={currentIndex}
           visitError={validationError ? undefined : currentEntry?.visitError}
+        />
+        <WebsiteSearchPanel
+          query={searchInput}
+          searchState={searchState}
+          loading={searchLoading}
+          onQueryChange={setSearchInput}
+          onSearch={(event) => {
+            void search(event);
+          }}
+          onSelect={(result) => {
+            void navigate(
+              undefined,
+              result.address,
+              "search",
+              searchState,
+            );
+          }}
         />
         {historyOpen && (
           <BrowsingHistoryPanel
