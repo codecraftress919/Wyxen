@@ -19,3 +19,19 @@ export interface Site {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type NavigationType = "typed" | "link" | "search" | "history";
+
+export interface VisitHistoryItem {
+  _id: string;
+  address: string;
+  status: "success" | "not_found";
+  navigationType: NavigationType;
+  visitedAt: string;
+  site: Pick<Site, "_id" | "address" | "title"> | null;
+}
+
+export interface VisitHistoryPage {
+  data: VisitHistoryItem[];
+  nextCursor: string | null;
+}

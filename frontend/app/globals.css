@@ -161,17 +161,72 @@ body {
   color: #b42318;
 }
 
-.website-panel {
+.history-toggle {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  color: #344054;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.history-toggle:hover,
+.history-toggle[aria-expanded="true"] {
+  border-color: #b7c5df;
+  background: #f3f6fb;
+}
+
+.browser-content {
   flex: 1;
   min-height: 0;
   display: flex;
+}
+
+.website-panel {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
   flex-direction: column;
+  min-width: 0;
   margin: clamp(12px, 2vw, 24px);
   overflow: hidden;
   border: 1px solid #dbe0e8;
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 12px 35px rgba(26, 37, 58, 0.08);
+}
+
+.site-document {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-document-active {
+  position: relative;
+  z-index: 1;
+}
+
+.site-document-hidden {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.visit-error {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 9px 16px;
+  color: #9a3412;
+  background: #fff7ed;
+  border-bottom: 1px solid #fed7aa;
+  font-size: 13px;
 }
 
 .viewer-state {
@@ -184,6 +239,13 @@ body {
   padding: 32px;
   text-align: center;
   color: #667085;
+}
+
+.viewer-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #fff;
 }
 
 .viewer-state h1 {
@@ -268,6 +330,137 @@ body {
   background: #fff;
 }
 
+.browsing-history {
+  flex: 0 0 290px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: calc(100vh - 130px);
+  margin: clamp(12px, 2vw, 24px) clamp(12px, 2vw, 24px)
+    clamp(12px, 2vw, 24px) 0;
+  overflow: hidden;
+  border: 1px solid #dbe0e8;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(26, 37, 58, 0.08);
+}
+
+.history-panel-heading {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #e5e8ee;
+}
+
+.history-panel-heading h2 {
+  margin: 0;
+  color: #1d2939;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.history-count {
+  min-width: 24px;
+  padding: 2px 7px;
+  border-radius: 12px;
+  color: #315ea8;
+  background: #edf3ff;
+  font-size: 12px;
+  text-align: center;
+}
+
+.history-list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 4px 8px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.history-list li + li {
+  border-top: 1px solid #eef0f4;
+}
+
+.history-entry {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 11px 8px;
+  border: 0;
+  border-radius: 6px;
+  color: #344054;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.history-entry:hover {
+  background: #f5f7fa;
+}
+
+.history-address {
+  overflow: hidden;
+  color: #315ea8;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-entry-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #98a2b3;
+  font-size: 11px;
+}
+
+.history-status {
+  flex: 0 0 auto;
+  color: #027a48;
+}
+
+.history-status-missing {
+  color: #b42318;
+}
+
+.history-message {
+  margin: 0;
+  padding: 16px;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.history-error {
+  color: #b42318;
+}
+
+.history-load-more {
+  flex: 0 0 auto;
+  margin: 8px;
+  padding: 9px;
+  border: 1px solid #d9dee8;
+  border-radius: 7px;
+  color: #315ea8;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.history-load-more:hover:not(:disabled) {
+  background: #f3f6fb;
+}
+
+.history-load-more:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 @media (max-width: 640px) {
   .browser-toolbar {
     padding: 10px 12px;
@@ -291,23 +484,41 @@ body {
   }
 
   .person-row {
-    padding-left: 74px;
+    padding-left: 0;
   }
 
   .person-select-wrap {
     flex: 1;
+    min-width: 0;
   }
 
   .person-row select {
     width: 100%;
   }
 
+  .browser-content {
+    flex-direction: column;
+  }
+
   .website-panel {
     margin: 8px;
     border-radius: 8px;
+    min-height: 520px;
   }
 
   .site-frame {
     min-height: 520px;
+  }
+
+  .browsing-history {
+    flex: 0 0 auto;
+    max-height: 250px;
+    order: 1;
+    margin: 0 8px 8px;
+    border-radius: 8px;
+  }
+
+  .history-panel-heading {
+    padding: 12px;
   }
 }

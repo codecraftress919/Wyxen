@@ -8,19 +8,27 @@ interface BrowserToolbarProps {
   people: Person[];
   peopleError: string;
   selectedPersonId: string;
+  canGoBack: boolean;
+  canGoForward: boolean;
+  historyOpen: boolean;
   onAddressChange: (address: string) => void;
   onPersonChange: (personId: string) => void;
-  onNavigate: (event?: FormEvent) => void;
+  onNavigate: (event?: FormEvent<HTMLFormElement>) => void;
+  onBack: () => void;
+  onForward: () => void;
+  onToggleHistory: () => void;
 }
 
 function IconButton({
   label,
   children,
   disabled = false,
+  onClick,
 }: {
   label: string;
   children: ReactNode;
   disabled?: boolean;
+  onClick: () => void;
 }) {
   return (
     <button
@@ -29,6 +37,7 @@ function IconButton({
       title={label}
       disabled={disabled}
       className="icon-button"
+      onClick={onClick}
     >
       {children}
     </button>
@@ -40,23 +49,36 @@ export function BrowserToolbar({
   people,
   peopleError,
   selectedPersonId,
+  canGoBack,
+  canGoForward,
+  historyOpen,
   onAddressChange,
   onPersonChange,
   onNavigate,
+  onBack,
+  onForward,
+  onToggleHistory,
 }: BrowserToolbarProps) {
   return (
     <header className="browser-toolbar" aria-label="Browser controls">
       <div className="navigation-row">
         <div className="history-controls">
-          <IconButton label="Back" disabled>
+          <IconButton label="Back" disabled={!canGoBack} onClick={onBack}>
             <span aria-hidden="true">&#8592;</span>
           </IconButton>
-          <IconButton label="Forward" disabled>
+          <IconButton
+            label="Forward"
+            disabled={!canGoForward}
+            onClick={onForward}
+          >
             <span aria-hidden="true">&#8594;</span>
           </IconButton>
         </div>
 
-        <form className="address-form" onSubmit={onNavigate}>
+        <form
+          className="address-form"
+          onSubmit={(event) => onNavigate(event)}
+        >
           <label className="sr-only" htmlFor="site-address">
             Website address
           </label>
@@ -77,6 +99,14 @@ export function BrowserToolbar({
             Go
           </button>
         </form>
+        <button
+          type="button"
+          className="history-toggle"
+          aria-expanded={historyOpen}
+          onClick={onToggleHistory}
+        >
+          History
+        </button>
       </div>
 
       <div className="person-row">
